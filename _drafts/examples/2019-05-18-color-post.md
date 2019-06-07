@@ -3,6 +3,7 @@ layout: post
 title: Color Post
 tags: [Test, Color, Markdown]
 color: brown
+hide: true
 ---
 
 # What a colorful post!
