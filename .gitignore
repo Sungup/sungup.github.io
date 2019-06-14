@@ -25,3 +25,6 @@ jekyll-theme-type-on-strap.gemspec
 **/node_modules/*
 *-test.md
 *copy.md
+
+# VSCode Workspace files
+*.io.code-workspace
