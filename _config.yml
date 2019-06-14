@@ -1,7 +1,7 @@
 # SITE CONFIGURATION
 baseurl: ""
 url: "https://sungup.github.io"
-title: Sungup's Developer GitHub # site's title
+title: Sungup's DevLog # site's title
 description: "A website with blog posts and pages" # used by search engines
 
 defaults:
