@@ -81,7 +81,7 @@ First, open the `/etc/netplan/50-cloud-init.yaml` YAML file. Only ethernet
 config is stored only in the original configuration file. So, add the `wifis`
 field and setup the configuration values like this.
 
-```YAML
+```yaml
 network:
     version: 2
     ethernets:
