@@ -1,0 +1,36 @@
+# Icons on the footer
+rss: true         # Make sure you created a feed.xml with feed.xml layout
+email_address: "sungup@me.com" # Full email address, e.g. "sam@example.com"
+behance:
+bitbucket:
+dribbble:
+facebook: "sungup.moon"
+flickr:
+gitlab:
+github: "Sungup"
+instagram: "sungup.moon"
+keybase:
+linkedin: "https://www.linkedin.com/in/sungupmoon" # Full URL
+pinterest:
+reddit:
+soundcloud:
+stack_overflow:
+stack_exchange:   # Full URL
+steam:
+tumblr:
+twitter: "SungupMoon" # "twitter username"
+vimeo:
+wordpress:
+youtube:
+
+# Share button options
+share:
+  facebook: true
+  twitter: true
+  tumblr:
+  pinterest:
+  pocket:
+  reddit: true
+  linkedin:
+  wordpress:
+  email: true

@@ -2,12 +2,14 @@
 layout: post
 title: Generate a table of content
 tags: [toc.js, kramdown, Markdown, Customization]
+author: sylhare
+excerpt_separator: <!--more-->
 hide: true
 ---
 
 Test article, get the source on [github](https://github.com/Sylhare/Type-on-Strap/blob/gh-pages/_posts/2013-12-12-toc.js-for-table-of-content.md).
 
-# Using Kramdown GFM
+# Using Kramdown GFM <!--more-->
 
 <!-- To be placed at the beginning of the post, it is where the table of content will be generated -->
 * TOC

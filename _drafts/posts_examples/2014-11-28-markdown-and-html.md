@@ -2,7 +2,7 @@
 layout: post
 title: Markdown and HTML
 tags: [Test, Markdown]
-author-id: unknown # this author does not exist (purposely) in the _config.yml > authors
+author: rohanchandra
 hide: true
 ---
 
