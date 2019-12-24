@@ -2,8 +2,13 @@
 layout: post
 title: Prometheus on CentOS 8
 author-id: sungup
-tags: [centos, monitoring, prometheus]
+tags: [centos, monitoring, prometheus, grafana]
 ---
+
+CentOS 환경에서 Prometheus 설치하는 방법을 정리하였습니다. CentOS환경에서는 Ubuntu와 달리 Prometheus가
+기본 Repository에 포함되어 있지 않기 때문에 구축을 위해서는 Official Site에서 바이너리를 다운로드 받아 수동으로
+설치를 진행해야 합니다. 일부 서비스에 대해서만 모니터링 기능을 확장하는 경우 node_exporter 설치 방법만 참고하셔서 확장하면
+됩니다.
 
 ## Prerequisite
 
@@ -163,6 +168,11 @@ sudo journalctl -xe;
 
 ## Install Node Exporter
 
+If you already installed prometheus on other server, you can install
+node_exporter only on the target server. In this case, install the
+node_exporter without prometheus and register IP or URI address in the
+prometheus config the main server already installed prometheus.
+
 ### Install node_exporter and register as a service
 
 Extract achived node_exporter and install that `/usr/local/bin`
@@ -239,3 +249,4 @@ sudo systemctl reload firewalld;
 
 - [How to install and configure Prometheus on CentOS 7](https://www.fosslinux.com/10398/how-to-install-and-configure-prometheus-on-centos-7.htm)
 - [Instal Prometheus Server on CentOS 7 / Ubuntu 18.04](https://computingforgeeks.com/install-prometheus-server-on-centos-7/)
+- [How to install and configure Grafana on CentOS 7](https://www.fosslinux.com/8328/how-to-install-and-configure-grafana-on-centos-7.htm)
