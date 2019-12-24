@@ -29,7 +29,7 @@ sudo systemctl start prometheus prometheus-node-exporter;
 sudo systemctl enable prometheus prometheus-node-exporter;
 ```
 
-If you need node_exporter only, using following command.
+If you need node_exporter only, run following command.
 
 ```shell
 sudo apt install -y prometheus-node-exporter;
@@ -53,7 +53,7 @@ scrape_configs:
     - targets: ['localhost:9100', '<other node_exporter node>:9100']
 ```
 
-After register the other node_exporter, restart prometheus service on the main
+After register other node_exporter, restart prometheus service on the main
 prometheus server.
 
 ```shell
