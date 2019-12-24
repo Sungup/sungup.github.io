@@ -3,6 +3,7 @@ layout: post
 title: Ubuntu on Raspberry Pi 4
 author-id: sungup
 tags: [ubuntu, raspberry pi 4]
+date: 2019-12-23 19:13:59
 ---
 
 Raspberry Pi 4 + Ubuntu로 Cluster를 구축하면서 필요한 내용들을 정리하는 문서입니다. 사용하는 라즈베리파이는

@@ -2,7 +2,9 @@
 layout: post
 title: Prometheus on CentOS 8
 author-id: sungup
+img: "assets/img/post/20191223-prometheus-and-grafana-banner.png"
 tags: [centos, monitoring, prometheus, grafana]
+date: 2019-12-23 09:41:18
 ---
 
 CentOS 환경에서 Prometheus 설치하는 방법을 정리하였습니다. CentOS환경에서는 Ubuntu와 달리 Prometheus가

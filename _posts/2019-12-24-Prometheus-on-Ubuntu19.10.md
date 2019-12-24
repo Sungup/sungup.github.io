@@ -2,7 +2,9 @@
 layout: post
 title: Prometheus on Ubuntu 19.10
 author-id: sungup
+img: "assets/img/post/20191223-prometheus-and-grafana-banner.png"
 tags: [ubuntu, monitoring, prometheus, grafana]
+date: 2019-12-24 14:08:41
 ---
 
 Ubuntu 환경에서 Prometheus 설치하는 방법을 정리하였습니다. Ubuntu 환경에서는 Prometheus의 DEB 패키지가
