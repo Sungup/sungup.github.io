@@ -21,4 +21,78 @@ articles.
 
 ## Install Grafana
 
+### Register Grafana repository and Install packages
+
+Basically, CentOS and Ubuntu doesn't support Grafana package files. To install
+Grafana, you must register repository on each OS environments.
+
+#### CentOS
+
+To install Grafana on CentOS, you should make repository config file on
+`/etc/yum.repos.d/grafana.repo`. Make and edit that file using editor.
+
+```ini
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+```
+
+After store that config file, run `yum` or `dnf` command to install Grafana.
+
+##### Using YUM (CentOS 7, RedHat 7 and old Fedora)
+
+```shell
+sudo yum update -y;
+sudo yum install grafana;
+```
+
+##### Using DNF (CentOS 8, RedHat 8 and latest Fedora)
+
+```shell
+sudo dnf update -y;
+sudo dnf install grafana;
+```
+
+#### Ubuntu
+
+Different from CentOS, simply run 5 commands on terminal to install Grafana.
+
+```shell
+# 1. Install apt-transport-https because official repository runs only https protocol.
+sudo apt install -y apt-transport-https;
+
+# 2. Install dependencies.
+sudo apt install -y software-properties-common wget;
+
+# 3. Add repository and it's keys.
+sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main";
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+# 4. Install grafana
+sudo apt install grafana;
+```
+
+### Start and enable grafana-server
+
+After install packages, you can start and enable grafana-server to run
+background.
+
+```shell
+sudo systemctl start grafana-server;
+sudo systemctl enable grafana-server;
+```
+
+## Setup WEB UI configuration
+
 Under construction!
+
+## Reference
+
+- [Installing on Debian or Ubuntu](https://grafana.com/docs/grafana/latest/installation/debian/)
+- [Installing on RPM-based Linux(CentOS, Fedora, OpenSUSE, RedHat)](https://grafana.com/docs/grafana/latest/installation/rpm/)
