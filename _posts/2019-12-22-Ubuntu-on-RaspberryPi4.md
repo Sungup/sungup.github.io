@@ -72,6 +72,17 @@ following command.
 sudo hostnamectl set-hostname <host name you want>;
 ```
 
+## Change timezone
+
+After install os, basic timezone has been set to UTC. If you want to change
+timezone, run the following command.
+
+```shell
+sudo timedatectl set-timezone <your time zone>;
+```
+
+In my case, I ran `sudo timedatectl set-timezone Asia/Seoul`.
+
 ## WIFI Setup (netplan)
 
 I want to WIFI network as default network interface because my home router
