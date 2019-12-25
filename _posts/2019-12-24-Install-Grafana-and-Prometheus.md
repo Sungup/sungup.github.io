@@ -24,7 +24,7 @@ articles.
 ### Register Grafana repository and Install packages
 
 Basically, CentOS and Ubuntu doesn't support Grafana package files. To install
-Grafana, you must register repository on each OS environments.
+Grafana, you must register the grafana repository on each OS environments.
 
 #### CentOS
 
@@ -94,8 +94,8 @@ sudo systemctl enable grafana-server;
 
 You can access `http://<grafana-server>:3000` from a web browser and login with
 `admin`/`admin` credential. At the first login, you have to change the password
-of the `admin` account. After logged, following pages appear as the home
-dashboard.
+of the `admin` account. After logged, following page will be appeared as the
+home dashboard.
 
 ![install-grafana-02]
 
@@ -111,19 +111,19 @@ At the `Add data source` screen, click `Select` on the `Prometheus` item.
 ![install-grafana-04]
 
 For the prometheus, you must insert the **prometheus' URL** and click
-`Save & Test`. In the setting pages, URL fields suggests the default
-prometheus' URL, but not inserted. You can insert that field with the default
-value `http://localhost:9090`, or insert other prometheus main server URL if
-you installed grafana on the seperate server.
+`Save & Test`. In the setting pages, URL field suggests the default prometheus'
+URL, but not inserted. You can insert that field with the default value
+`http://localhost:9090`, or insert other prometheus main server URL if you
+installed prometheus on the seperate server.
 
 If pass the connection test for the prometheus, return to the home dashboard.
 
 ### Add the new dashboard
 
-Before create the new dashboard, you can find many good dashboard templated
+Before create the new dashboard, you can find many good dashboard templates
 in [the official grafana site](https://grafana.com/grafana/dashboards). In this
-article, I use the `Node Exporter Server Metrics` dashboard to monitor multiple
-servers.
+article, I will use the `Node Exporter Server Metrics` dashboard to monitor
+multiple servers.
 
 ![install-grafana-06]
 
@@ -134,10 +134,9 @@ of filtered list, you can find the `Node Exporter Server Metrics` by
 
 ![install-grafana-07]
 
-At the detail item page, you must remember the **ID number** at the right
-panel or download JSON file to click `Download JSON` link. The installed
-grafana on your server downloads the JSON template file and apply that using
-the **ID number**.
+In the detail page, you must remember the **ID number** at the right panel or
+download JSON file to click `Download JSON` link. The installed grafana on your
+server downloads the JSON template file and apply that using the **ID number**.
 
 ![install-grafana-05]
 
@@ -146,7 +145,7 @@ import the grafana dashboard.
 
 ![install-grafana-08]
 
-At the import page, insert the dashboard's **ID number** or upload the
+In the import page, insert the dashboard's **ID number** or upload the
 downloaded JSON file. After insert the number, import pages shows the detail
 configuration automatically.
 
