@@ -2,7 +2,7 @@
 layout: post
 title: Prometheus on Ubuntu 19.10
 author-id: sungup
-feature-img: "assets/img/posts/20191223-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.webp"
 tags: [ubuntu, monitoring, prometheus, grafana]
 date: 2019-12-24 14:08:41
 ---

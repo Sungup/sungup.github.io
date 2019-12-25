@@ -2,7 +2,7 @@
 layout: post
 title: Prometheus on CentOS 8
 author-id: sungup
-feature-img: "assets/img/posts/20191223-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.webp"
 tags: [centos, monitoring, prometheus, grafana]
 date: 2019-12-23 09:41:18
 ---
@@ -235,7 +235,7 @@ sudo systemctl restart prometheus;
 
 Access `http://<prometheus server>:9090/targets` and check the targets are up.
 
-![prometheus-target](/assets/img/posts/20191223-prometheus-01.png)
+![prometheus-target](/assets/img/posts/2019-12-23-prometheus-01.webp)
 
 ## Open filrewall for prometheus and node_exporter
 

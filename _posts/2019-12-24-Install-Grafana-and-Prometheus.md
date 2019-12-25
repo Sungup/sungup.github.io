@@ -2,7 +2,7 @@
 layout: post
 title: Install Grafana and Prometheus 
 author-id: sungup
-feature-img: "assets/img/posts/20191223-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.webp"
 tags: [ubuntu, centos, monitoring, prometheus, grafana]
 date: 2019-12-24 14:35:41
 ---
@@ -90,9 +90,31 @@ sudo systemctl enable grafana-server;
 
 ## Setup WEB UI configuration
 
+![install-grafana-01]
+
+You can access `http://<grafana-server>:3000` from a web browser and login with
+`admin`/`admin` credential. At the first login, you have to change the password
+of the `admin` account. After logged, following pages appear as the dashboard.
+
+![install-grafana-02]
+
+### Add data source
+
 Under construction!
 
 ## Reference
 
 - [Installing on Debian or Ubuntu](https://grafana.com/docs/grafana/latest/installation/debian/)
 - [Installing on RPM-based Linux(CentOS, Fedora, OpenSUSE, RedHat)](https://grafana.com/docs/grafana/latest/installation/rpm/)
+- [How to Monitor an Ubuntu Server with Grafana & Prometheus](https://oastic.com/how-to-monitor-an-ubuntu-server-with-grafana-prometheus/)
+
+[install-grafana-01]: /assets/img/posts/2019-12-24-install-grafana-01.webp {: width="400px"}
+[install-grafana-02]: /assets/img/posts/2019-12-24-install-grafana-02.webp {: width="400px"}
+[install-grafana-03]: /assets/img/posts/2019-12-24-install-grafana-03.webp {: width="400px"}
+[install-grafana-04]: /assets/img/posts/2019-12-24-install-grafana-04.webp {: width="400px"}
+[install-grafana-05]: /assets/img/posts/2019-12-24-install-grafana-05.webp {: width="400px"}
+[install-grafana-06]: /assets/img/posts/2019-12-24-install-grafana-06.webp {: width="400px"}
+[install-grafana-07]: /assets/img/posts/2019-12-24-install-grafana-07.webp {: width="400px"}
+[install-grafana-08]: /assets/img/posts/2019-12-24-install-grafana-08.webp {: width="400px"}
+[install-grafana-09]: /assets/img/posts/2019-12-24-install-grafana-09.webp {: width="400px"}
+[install-grafana-10]: /assets/img/posts/2019-12-24-install-grafana-10.webp {: width="400px"}
