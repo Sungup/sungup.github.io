@@ -66,7 +66,7 @@ sudo systemctl restart prometheus;
 ## Delete unwanted datas
 
 To run the admin-api, you should call http address using `curl`. So, if `curl`
-doesn't installed in your system, you must install that.
+isn't installed in your system, you must install that.
 
 ```shell
 # Ubuntu
