@@ -2,7 +2,7 @@
 layout: post
 title: Install Grafana and Prometheus 
 author-id: sungup
-feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.webp"
+feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
 tags: [ubuntu, centos, monitoring, prometheus, grafana]
 date: 2019-12-24 14:35:41
 ---

@@ -2,7 +2,7 @@
 layout: post
 title: Prometheus on CentOS 8
 author-id: sungup
-feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.webp"
+feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
 tags: [centos, monitoring, prometheus, grafana]
 date: 2019-12-23 09:41:18
 ---
