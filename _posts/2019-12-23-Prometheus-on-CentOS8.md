@@ -235,7 +235,7 @@ sudo systemctl restart prometheus;
 
 Access `http://<prometheus server>:9090/targets` and check the targets are up.
 
-![prometheus-target](/assets/img/posts/2019-12-23-prometheus-01.webp)
+![prometheus-target](/assets/img/posts/2019-12-23-prometheus-01.png)
 
 ## Open filrewall for prometheus and node_exporter
 
