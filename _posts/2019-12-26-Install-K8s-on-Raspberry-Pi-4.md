@@ -27,7 +27,7 @@ will be failed with *"missing cgroups: memory"*.
 To avoid this problem, you should modify the `/boot/firmware/nobtcmd.txt` file.
 Open the `nobtcmd.txt` and append the following boot command options.
 
-```txt
+```text
 cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
 ```
 
@@ -49,6 +49,12 @@ to apply sysctl parameters on boot time.
 ```shell
 sudo modprobe overlay;
 sudo modprobe br_netfilter;
+
+# Make append on-boot module list on /etc/modules-load.d/crio.conf
+sudo tee -a /etc/modules-load.d/crio.conf << EOF
+overlay
+br_netfilter
+EOF
 
 # Make and append sysctl network parameters on /etc/sysctl.d/99-kubernetes-cri.conf
 sudo tee -a /etc/sysctl.d/99-kubernetes-cri.conf << EOF
@@ -99,7 +105,7 @@ sudo systemctl enable crio;
 
 ### Check cgroup_driver
 
-In the default CRI-O configuration, `cgroup_manager` has been set to the
+In the default CRI-O configuration, `cgroup_manager` has been set with the
 **systemd**. This is the CRI-O official recommended value. But, K8s uses
 **cgroupfs** as the default cgroup manager. So, you must check and sync that
 value between **kubelet** and **cri-o** services.
@@ -192,12 +198,12 @@ sudo systemctl daemon-reload;
 sudo systemctl restart kubelet;
 ```
 
-But, if the cgroup driver already set to `cgroupfs`, you don't need to change
-that value.
+But, if the CRI's cgroup driver already set to `cgroupfs`, you don't need to
+add `--cgroup-driver` option.
 
 ## Creating a single control-plane cluster
 
-To initialize kubernetes, run `kubeadm init` with pod cidr and api server ip.
+To initialize kubernetes, run `kubeadm init` with pod's CIDR and api server ip.
 Also `kubeadm config images pull` to verify connectivity to gcr.io registries.
 
 In this example, I use `10.244.0.0/16` for the pod network CIDR.
@@ -219,7 +225,7 @@ If initializing is succeed, you can see the following text at the end of
 terminal. Please save this text into a file because the last `kubeadm join`
 command will be used on the other worker nodes.
 
-```txt
+```text
 ........
 [kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
 [kubelet-check] Initial timeout of 40s passed.
@@ -259,7 +265,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config;
 If you check `systemctl status kubelet`, you can get an error text at the end
 of console.
 
-```log
+```text
 Failed to get kubelets cgroup: cpu and memory cgroup hierarchy not unified. Cpu:/, memory: /system.slice/kubelet.service.
 ```
 
