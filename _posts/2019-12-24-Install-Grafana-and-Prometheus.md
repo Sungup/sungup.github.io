@@ -108,9 +108,12 @@ Under construction!
 - [Installing on RPM-based Linux(CentOS, Fedora, OpenSUSE, RedHat)](https://grafana.com/docs/grafana/latest/installation/rpm/)
 - [How to Monitor an Ubuntu Server with Grafana & Prometheus](https://oastic.com/how-to-monitor-an-ubuntu-server-with-grafana-prometheus/)
 
-[install-grafana-01]: /assets/img/posts/2019-12-24-install-grafana-01.webp {: width="400px"}
-[install-grafana-02]: /assets/img/posts/2019-12-24-install-grafana-02.webp {: width="400px"}
-[install-grafana-03]: /assets/img/posts/2019-12-24-install-grafana-03.webp {: width="400px"}
+[install-grafana-01]: /assets/img/posts/2019-12-24-install-grafana-01.webp 
+{: width="400px"}
+[install-grafana-02]: /assets/img/posts/2019-12-24-install-grafana-02.webp 
+{: width="400px"}
+[install-grafana-03]: /assets/img/posts/2019-12-24-install-grafana-03.webp 
+{: width="400px"}
 [install-grafana-04]: /assets/img/posts/2019-12-24-install-grafana-04.webp {: width="400px"}
 [install-grafana-05]: /assets/img/posts/2019-12-24-install-grafana-05.webp {: width="400px"}
 [install-grafana-06]: /assets/img/posts/2019-12-24-install-grafana-06.webp {: width="400px"}
