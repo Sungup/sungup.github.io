@@ -276,10 +276,10 @@ default role name is empty(`<none>`), so you can set the new role name to the
 new node.
 
 ```text
-ubuntu@rbp4001:~$ kubectl get nodes -o wide
-NAME                STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
-<node name 1>       Ready    master   3h23m   v1.17.0   <internal ip> <none>        Ubuntu 19.10   5.3.0-1014-raspi2   cri-o://1.15.3-dev
-<node name 2>       Ready    <none>   3m      v1.17.0   <internal ip> <none>        Ubuntu 19.10   5.3.0-1014-raspi2   cri-o://1.15.3-dev
+ubuntu@rbp4001:~$ kubectl get nodes
+NAME                STATUS   ROLES           AGE     VERSION
+rbp4001.sungup.io   Ready    master          3h41m   v1.17.0
+rbp4002.sungup.io   Ready    <none>          20m     v1.17.0
 ```
 
 To add the role name on the node, you can run following command.
