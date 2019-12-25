@@ -94,13 +94,80 @@ sudo systemctl enable grafana-server;
 
 You can access `http://<grafana-server>:3000` from a web browser and login with
 `admin`/`admin` credential. At the first login, you have to change the password
-of the `admin` account. After logged, following pages appear as the dashboard.
+of the `admin` account. After logged, following pages appear as the home
+dashboard.
 
 ![install-grafana-02]
 
 ### Add data source
 
-Under construction!
+To add data source from prometheus, you can click `Add data source` in the
+home dashboard.
+
+![install-grafana-03]
+
+At the `Add data source` screen, click `Select` on the `Prometheus` item.
+
+![install-grafana-04]
+
+For the prometheus, you must insert the **prometheus' URL** and click
+`Save & Test`. In the setting pages, URL fields suggests the default
+prometheus' URL, but not inserted. You can insert that field with the default
+value `http://localhost:9090`, or insert other prometheus main server URL if
+you installed grafana on the seperate server.
+
+If pass the connection test for the prometheus, return to the home dashboard.
+
+### Add the new dashboard
+
+Before create the new dashboard, you can find many good dashboard templated
+in [the official grafana site](https://grafana.com/grafana/dashboards). In this
+article, I use the `Node Exporter Server Metrics` dashboard to monitor multiple
+servers.
+
+![install-grafana-06]
+
+First, you can access official grafana site and search the
+`Node Exporter Server Metrics` using the left side filter panel. At the top
+of filtered list, you can find the `Node Exporter Server Metrics` by
+*Knut Ytterhaug* and click that to get the detail information.
+
+![install-grafana-07]
+
+At the detail item page, you must remember the **ID number** at the right
+panel or download JSON file to click `Download JSON` link. The installed
+grafana on your server downloads the JSON template file and apply that using
+the **ID number**.
+
+![install-grafana-05]
+
+Return to your grafana server, you can click `+ - Create - Import` menu to
+import the grafana dashboard.
+
+![install-grafana-08]
+
+At the import page, insert the dashboard's **ID number** or upload the
+downloaded JSON file. After insert the number, import pages shows the detail
+configuration automatically.
+
+![install-grafana-09]
+
+You can keep all of settings about dashbaord without prometheus field. At the
+prometheus fields, select the exact data source added before.
+
+If you select the prometheus' data source, click `Import`. After that, you can
+see the `Node Exporter Server Metrics` dashboard like this.
+
+![install-grafana-10]
+
+Currently, I'm using the following 3 dashboards:
+
+1. [Node Exporter Server Metrics](https://grafana.com/grafana/dashboards/405)
+   by *Knut Ytterhaug*: To monitoring one more servers.
+2. [Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
+   by *idealista*: For the detail monitoring only 1 server.
+3. [Linux Hosts Metrics | Base](https://grafana.com/grafana/dashboards/10180)
+   by *Rune Rønneseth*: For the detail monitoring 1~3 servers.
 
 ## Reference
 
@@ -109,22 +176,12 @@ Under construction!
 - [How to Monitor an Ubuntu Server with Grafana & Prometheus](https://oastic.com/how-to-monitor-an-ubuntu-server-with-grafana-prometheus/)
 
 [install-grafana-01]: /assets/img/posts/2019-12-24-install-grafana-01.png
-{: width="400px"}
 [install-grafana-02]: /assets/img/posts/2019-12-24-install-grafana-02.png
-{: width="400px"}
 [install-grafana-03]: /assets/img/posts/2019-12-24-install-grafana-03.png
-{: width="400px"}
 [install-grafana-04]: /assets/img/posts/2019-12-24-install-grafana-04.png
-{: width="400px"}
 [install-grafana-05]: /assets/img/posts/2019-12-24-install-grafana-05.png
-{: width="400px"}
 [install-grafana-06]: /assets/img/posts/2019-12-24-install-grafana-06.png
-{: width="400px"}
 [install-grafana-07]: /assets/img/posts/2019-12-24-install-grafana-07.png
-{: width="400px"}
 [install-grafana-08]: /assets/img/posts/2019-12-24-install-grafana-08.png
-{: width="400px"}
 [install-grafana-09]: /assets/img/posts/2019-12-24-install-grafana-09.png
-{: width="400px"}
 [install-grafana-10]: /assets/img/posts/2019-12-24-install-grafana-10.png
-{: width="400px"}
