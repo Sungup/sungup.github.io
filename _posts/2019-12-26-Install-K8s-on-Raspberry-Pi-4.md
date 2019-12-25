@@ -179,6 +179,9 @@ sudo apt install kubectl kubeadm kubelet;
 
 ### Configure cgroup driver userd by kubelet on control-plane node
 
+***Caution! This configuration has been deprecated. I'll change this setting to right
+way soon.***
+
 In this example, we use CRI-O as a default CRI, so we must modify file
 `/etc/default/kubelet` with CRI's `cgroup-driver`. So, you must check the
 cgroup driver option value in `/etc/crio/crio.conf` and sync with kubelet's
@@ -246,7 +249,7 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join 10.0.1.61:6443 --token <token> \
+kubeadm join <control plane ip>:6443 --token <token> \
     --discovery-token-ca-cert-hash sha256:<hash>
 ```
 
@@ -256,6 +259,39 @@ Also, you must run 3 commands following logs.
 mkdir -p $HOME/.kube;
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config;
 sudo chown $(id -u):$(id -g) $HOME/.kube/config;
+```
+
+## Add worker node
+
+Same with the creating control plane, simply run following command. The *token*
+and *hash* values are notified when installing `kube init`.
+
+```shell
+kubeadm join <control plane ip>:6443 --token <token> \
+    --discovery-token-ca-cert-hash sha256:<hash>
+```
+
+After running `kubeadm join`, you can check name, status, and roles. But the
+default role name is empty(`<none>`), so you can set the new role name to the
+new node.
+
+```text
+ubuntu@rbp4001:~$ kubectl get nodes -o wide
+NAME                STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
+<node name 1>       Ready    master   3h23m   v1.17.0   <internal ip> <none>        Ubuntu 19.10   5.3.0-1014-raspi2   cri-o://1.15.3-dev
+<node name 2>       Ready    <none>   3m      v1.17.0   <internal ip> <none>        Ubuntu 19.10   5.3.0-1014-raspi2   cri-o://1.15.3-dev
+```
+
+To add the role name on the node, you can run following command.
+
+```shell
+kubectl label node <node name> node-role.kubernetes.io/<role name>=<any name>;
+```
+
+Also, you can remove role name using this.
+
+```shell
+kubectl label node <node name> node-role.kubernetes.io/<role name>-;
 ```
 
 ## Trouble shooting
