@@ -136,9 +136,32 @@ enough for me, but is not best solution.
 If I found the better solution for this channel issue, I'll add more detail
 solution in this article.
 
+#### Clear journalctl old logs
+
+Raspberry Pi only support < 32GB SD card because of the boot restriction. So,
+there is no enough volume space to run server. In my case, the `journalctl`
+logs consume many space of root partition because of the network warning and
+errors. So, I has set the periodic cleaning up journal logs every Sunday
+night.
+
+To register the cleaning job every Monday, run the `crontab` as root
+priviliges.
+
+```shell
+sudo crontab -e;
+```
+
+And add the following entry using text editor. This command will erase old logs
+older than 2 days.
+
+```text
+59 23 * * 0 journalctl -m --vacuum-time=2d
+```
+
 ## Reference
 
 * [Install Ubuntu Server on a Raspberry Pi 2, 3 or 4](https://ubuntu.com/download/raspberry-pi)
 * [Raspberry Pi HDMI display not working, how to solve it?](https://howtoraspberrypi.com/raspberry-pi-hdmi-not-working/)
 * [How to Change Hostname on Ubuntu 18.04](https://linuxize.com/post/how-to-change-hostname-on-ubuntu-18-04/)
 * [Wifi channel 7-10 (between 6 and 11) don't work (RPI3B)](https://forum.openwrt.org/t/wifi-channels-7-10-between-6-and-11-dont-work-rpi3b/40342)
+* [How to clear journalctl](https://unix.stackexchange.com/questions/139513/how-to-clear-journalctl)
