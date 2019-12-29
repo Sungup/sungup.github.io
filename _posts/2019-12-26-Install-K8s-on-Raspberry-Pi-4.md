@@ -3,7 +3,7 @@ layout: post
 title: Install Kubernetes on Raspberry Pi 4
 author-id: sungup
 #feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
-tags: [ubuntu, raspberry pi 4, kubernetes, docker]
+tags: [ubuntu, raspberry pi 4, kubernetes, cri-o, container]
 date: 2019-12-26 00:00:00
 ---
 
@@ -261,6 +261,157 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config;
 sudo chown $(id -u):$(id -g) $HOME/.kube/config;
 ```
 
+## Installing a pod network add-on with Calico
+
+You should install a pod network add-on for the communication with each other.
+In this article, I explane installation using the `Calico` add-on. For the
+other add-ons, please read the Kubernetes official documents.
+
+### Download Calico YAML
+
+First of all, download `calico.yaml` file from the official site. But, **DON'T
+RUN `kubectl apply` DIRECTLY!**
+
+```shell
+# Download the stable version at Dec. 29, 2019.
+wget https://docs.projectcalico.org/v3.8/menifests/calico.yaml;
+```
+
+### Modify YAML to run Calico on Raspberry Pi
+
+Before apply the `calico.yaml` file, we should change the following 4 items.
+
+1. Change **image** fields from `calico` to `docker.io/calico`.
+2. Change `CALICO_IPV4POOL_CIDR` values to the our CIDR `10.244.0.0/16`.
+3. Add `IP_AUTODETECTION_METHOD` environment value with `interface=wlan0`.
+4. Add `FELIX_IGNORELOOSERPF` environment value with `true`.
+
+#### Change image fields
+
+Different from default Docker environment, our ubuntu + cri-o environment
+doesn't have default registry value on `/etc/crio/crio.conf`. So that, we
+should add the registry addresss on the image path. If you uncomment the
+default registry on the configuration faile , you shoudn't set the registry
+to `quay.io`, because `quay.io` supports only amd64/x86 architecture
+images. We need the arm64 images to run on the Raspberry Pi, add the
+`docker.io` to download arm64 based images.
+
+#### Change CALICO_IPV4POOL_CIDR
+
+We already set the CIDR with `10.244.0.0/16`, but the default pod-network for
+the calico is `192.168.0.0/16`. So that, we should match the CIDR between
+`kubeadm init` and `calico.yaml`.
+
+#### Add IP_AUTODETECTION_METHOD (Only for the WLAN interface)
+
+Through the all post for Raspberry Pi 4, I had set the main network interface
+to the `wlan0` not `eth0` because of lack of the home network switch`s port.
+But, it raises some fault to find the pod's network interface.
+
+To solve this problem, I must set the `IP_AUTODETECTION_METHOD` to make the
+`calico-node` point to the `wlan0` as the default network interface. If you
+use the wlan0 as the default network like me, please check the YAML configs
+the end of this calico sub-article.
+
+#### Add FELIX_IGNORELOOSERPF (Optional)
+
+Calico's node pods will not be READY to `1/1` in spite of `Running` state. I
+saw an article for Calico from [Creating a Kind Cluster With Calico Networking]
+by *Alexander Brand*. But, he doesn't recommend this method while setting up
+pods network directly.
+
+You can see the RPF setting value in `/proc/sys/net/ipv4/conf/all/rp_filter`
+may be set with 2 as **loose** RPF. ~~I didn't set that value to 1, but guess
+this method is better than changing the `FELIX_IGNORELOOSERPF` directly.~~
+
+#### Differentials between original and mofified YAML
+
+Following **diff** contents is the changed values from the original
+`calico.yaml`.
+
+```diff
+--- calico-origin.yaml 2019-12-29 19:24:30.708147176 +0900
++++ calico.yaml 2019-12-29 20:16:09.719217019 +0900
+@@ -515,7 +515,7 @@
+         # It can be deleted if this is a fresh installation, or if you have already
+         # upgraded to use calico-ipam.
+         - name: upgrade-ipam
+-          image: calico/cni:v3.8.5
++          image: docker.io/calico/cni:v3.8.5
+           command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
+           env:
+             - name: KUBERNETES_NODE_NAME
+@@ -537,7 +537,7 @@
+         # This container installs the CNI binaries
+         # and CNI network config file on each node.
+         - name: install-cni
+-          image: calico/cni:v3.8.5
++          image: docker.io/calico/cni:v3.8.5
+           command: ["/install-cni.sh"]
+           env:
+             # Name of the CNI config file to create.
+@@ -573,7 +573,7 @@
+         # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
+         # to communicate with Felix over the Policy Sync API.
+         - name: flexvol-driver
+-          image: calico/pod2daemon-flexvol:v3.8.5
++          image: docker.io/calico/pod2daemon-flexvol:v3.8.5
+           volumeMounts:
+           - name: flexvol-driver-host
+             mountPath: /host/driver
+@@ -584,7 +584,7 @@
+         # container programs network policy and routes on each
+         # host.
+         - name: calico-node
+-          image: calico/node:v3.8.5
++          image: docker.io/calico/node:v3.8.5
+           env:
+             # Use Kubernetes API as the backing datastore.
+             - name: DATASTORE_TYPE
+@@ -609,6 +609,10 @@
+             # Auto-detect the BGP IP address.
+             - name: IP
+               value: "autodetect"
++            - name: FELIX_IGNORELOOSERPF
++              value: "true"
++            - name: IP_AUTODETECTION_METHOD
++              value: "interface=wlan0"
+             # Enable IPIP
+             - name: CALICO_IPV4POOL_IPIP
+               value: "Always"
+@@ -622,7 +626,7 @@
+             # chosen from this range. Changing this value after installation will have
+             # no effect. This should fall within `--cluster-cidr`.
+             - name: CALICO_IPV4POOL_CIDR
+-              value: "192.168.0.0/16"
++              value: "10.244.0.0/16"
+             # Disable file logging so `kubectl logs` works.
+             - name: CALICO_DISABLE_FILE_LOGGING
+               value: "true"
+@@ -759,7 +763,7 @@
+       priorityClassName: system-cluster-critical
+       containers:
+         - name: calico-kube-controllers
+-          image: calico/kube-controllers:v3.8.5
++          image: docker.io/calico/kube-controllers:v3.8.5
+           env:
+             # Choose which controllers to run.
+             - name: ENABLED_CONTROLLERS
+```
+
+### Apply calico.yaml
+
+```shell
+# Open firewall port for Calico
+sudo ufw allow 179/tcp;
+
+# Apply calico`s pods
+kubectl apply -f calico.yaml;
+```
+
+Once a pod network has been installed, you can confirm that it is working by
+checking that pod is Running in the out of `kubectl get pods --all-namespaces`.
+
 ## Add worker node
 
 Same with the creating control plane, simply run following command. The *token*
@@ -324,7 +475,18 @@ RestartSec=10
 
 ## Reference
 
-- [Raspberry Pi 4 Ubuntu 19.10 cannot enable cgroup memory at bootstrap](https://askubuntu.com/questions/1189480/raspberry-pi-4-ubuntu-19-10-cannot-enable-cgroup-memory-at-boostrap)
-- [Container runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes)
-- [Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
-- [Failed to get kubelets cgroup](https://stackoverflow.com/questions/57456667/failed-to-get-kubelets-cgroup)
+- [Raspberry Pi 4 Ubuntu 19.10 cannot enable cgroup memory at bootstrap]
+- [Container runtimes]
+- [Installing kubeadm]
+- [Creating a single control-plane cluster with kubeadm]
+- [Creating a Kind Cluster With Calico Networking]
+- [pod calico-node on worker nodes with 'CrashLoopBackOff']
+- [Failed to get kubelets cgroup]
+
+[Raspberry Pi 4 Ubuntu 19.10 cannot enable cgroup memory at bootstrap]: https://askubuntu.com/questions/1189480/raspberry-pi-4-ubuntu-19-10-cannot-enable-cgroup-memory-at-boostrap
+[Container runtimes]: https://kubernetes.io/docs/setup/production-environment/container-runtimes
+[Installing kubeadm]: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+[Creating a single control-plane cluster with kubeadm]: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+[Creating a Kind Cluster With Calico Networking]: https://alexbrand.dev/post/creating-a-kind-cluster-with-calico-networking/
+[pod calico-node on worker nodes with 'CrashLoopBackOff']: https://github.com/projectcalico/calico/issues/2720
+[Failed to get kubelets cgroup]: https://stackoverflow.com/questions/57456667/failed-to-get-kubelets-cgroup
