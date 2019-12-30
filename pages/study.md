@@ -7,4 +7,4 @@ feature-img: "assets/img/pexels/computer.jpeg"
 icon: "fa-file-text-o"
 ---
 
-{% include portfolio.html %}
+{% include study.html %}
