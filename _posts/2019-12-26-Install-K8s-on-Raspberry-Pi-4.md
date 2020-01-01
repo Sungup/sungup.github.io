@@ -179,9 +179,6 @@ sudo apt install kubectl kubeadm kubelet;
 
 ### Configure cgroup driver used by kubelet on control-plane node
 
-***Caution! This configuration has been deprecated. I'll change this setting to right
-way soon.***
-
 In this example, we use CRI-O as a default CRI, so we must modify file
 `/etc/default/kubelet` with CRI's `cgroup-driver`. So, you must check the
 cgroup driver option value in `/etc/crio/crio.conf` and sync with kubelet's
