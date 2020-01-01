@@ -269,12 +269,16 @@ other add-ons, please read the Kubernetes official documents.
 
 ### Download Calico YAML
 
-First of all, download `calico.yaml` file from the official site. But, **DON'T
-RUN `kubectl apply` DIRECTLY!**
+First of all, download `calico.yaml` file from the official site. The official
+document recommends the 3.8 version calico, but that version pod2daemon image
+has a Makefile bug and not working on the ARM64 architecture. So that reason,
+I use the 3.9, 3.10 or 3.11 calico YAML file. But, **DON'T RUN `kubectl apply`
+DIRECTLY!**
 
 ```shell
-# Download the stable version at Dec. 29, 2019.
-wget https://docs.projectcalico.org/v3.8/menifests/calico.yaml;
+# The stable version 3.8 at Dec. 29, 2019, but we use 3.11 image to run on
+# Raspberry Pi 4.
+wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml;
 ```
 
 ### Modify YAML to run Calico on Raspberry Pi
@@ -330,45 +334,45 @@ Following **diff** contents is the changed values from the original
 `calico.yaml`.
 
 ```diff
---- calico-origin.yaml 2019-12-29 19:24:30.708147176 +0900
-+++ calico.yaml 2019-12-29 20:16:09.719217019 +0900
-@@ -515,7 +515,7 @@
+--- calico-original.yaml        2020-01-01 15:31:04.530374465 +0900
++++ calico.yaml 2020-01-01 15:28:16.620898686 +0900
+@@ -516,7 +516,7 @@
          # It can be deleted if this is a fresh installation, or if you have already
          # upgraded to use calico-ipam.
          - name: upgrade-ipam
--          image: calico/cni:v3.8.5
-+          image: docker.io/calico/cni:v3.8.5
+-          image: calico/cni:v3.11.1
++          image: docker.io/calico/cni:v3.11.1
            command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
            env:
              - name: KUBERNETES_NODE_NAME
-@@ -537,7 +537,7 @@
+@@ -538,7 +538,7 @@
          # This container installs the CNI binaries
          # and CNI network config file on each node.
          - name: install-cni
--          image: calico/cni:v3.8.5
-+          image: docker.io/calico/cni:v3.8.5
+-          image: calico/cni:v3.11.1
++          image: docker.io/calico/cni:v3.11.1
            command: ["/install-cni.sh"]
            env:
              # Name of the CNI config file to create.
-@@ -573,7 +573,7 @@
+@@ -574,7 +574,7 @@
          # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
          # to communicate with Felix over the Policy Sync API.
          - name: flexvol-driver
--          image: calico/pod2daemon-flexvol:v3.8.5
-+          image: docker.io/calico/pod2daemon-flexvol:v3.8.5
+-          image: calico/pod2daemon-flexvol:v3.11.1
++          image: docker.io/calico/pod2daemon-flexvol:v3.11.1
            volumeMounts:
            - name: flexvol-driver-host
              mountPath: /host/driver
-@@ -584,7 +584,7 @@
+@@ -585,7 +585,7 @@
          # container programs network policy and routes on each
          # host.
          - name: calico-node
--          image: calico/node:v3.8.5
-+          image: docker.io/calico/node:v3.8.5
+-          image: calico/node:v3.11.1
++          image: docker.io/calico/node:v3.11.1
            env:
              # Use Kubernetes API as the backing datastore.
              - name: DATASTORE_TYPE
-@@ -609,6 +609,10 @@
+@@ -610,6 +610,10 @@
              # Auto-detect the BGP IP address.
              - name: IP
                value: "autodetect"
@@ -379,21 +383,12 @@ Following **diff** contents is the changed values from the original
              # Enable IPIP
              - name: CALICO_IPV4POOL_IPIP
                value: "Always"
-@@ -622,7 +626,7 @@
-             # chosen from this range. Changing this value after installation will have
-             # no effect. This should fall within `--cluster-cidr`.
-             - name: CALICO_IPV4POOL_CIDR
--              value: "192.168.0.0/16"
-+              value: "10.244.0.0/16"
-             # Disable file logging so `kubectl logs` works.
-             - name: CALICO_DISABLE_FILE_LOGGING
-               value: "true"
-@@ -759,7 +763,7 @@
+@@ -760,7 +764,7 @@
        priorityClassName: system-cluster-critical
        containers:
          - name: calico-kube-controllers
--          image: calico/kube-controllers:v3.8.5
-+          image: docker.io/calico/kube-controllers:v3.8.5
+-          image: calico/kube-controllers:v3.11.1
++          image: docker.io/calico/kube-controllers:v3.11.1
            env:
              # Choose which controllers to run.
              - name: ENABLED_CONTROLLERS
