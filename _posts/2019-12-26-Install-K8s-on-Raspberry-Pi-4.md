@@ -77,7 +77,7 @@ sudo add-apt-repository ppa:projectatomic/ppa;
 ```
 
 However, CRI-O only supports stable ubuntu version (XX.04) only. To install
-CRI-O on the Ubuntu 18.10(cosmit)/19.10(eoan), you must modify the repository
+CRI-O on the Ubuntu 18.10(cosmic)/19.10(eoan), you must modify the repository
 config file at `/etc/apt/sources.list.d/projectatomic-ubuntu-ppa-eoan.list`.
 Open the repository config file and change release version from `eoan` to
 `disco`.
@@ -289,12 +289,12 @@ Before apply the `calico.yaml` file, we should change the following 4 items.
 #### Change image fields
 
 Different from default Docker environment, our ubuntu + cri-o environment
-doesn't have default registry value on `/etc/crio/crio.conf`. So that, we
-should add the registry addresss on the image path. If you uncomment the
-default registry on the configuration faile , you shoudn't set the registry
-to `quay.io`, because `quay.io` supports only amd64/x86 architecture
-images. We need the arm64 images to run on the Raspberry Pi, add the
-`docker.io` to download arm64 based images.
+doesn't have default registry value in `/etc/crio/crio.conf`. So that, we
+should add the registry address at the image path. If you uncomment the
+default registry in the configuration file , you shoudn't set the registry
+to `quay.io`, because the calico images from that registry support only the
+amd64/x86 architecture. We need the arm64 images to run on the Raspberry Pi,
+add the `docker.io` to download arm64 based images.
 
 #### Change CALICO_IPV4POOL_CIDR
 
@@ -324,7 +324,7 @@ You can see the RPF setting value in `/proc/sys/net/ipv4/conf/all/rp_filter`
 may be set with 2 as **loose** RPF. ~~I didn't set that value to 1, but guess
 this method is better than changing the `FELIX_IGNORELOOSERPF` directly.~~
 
-#### Differentials between original and mofified YAML
+#### Differences between original and modified YAML
 
 Following **diff** contents is the changed values from the original
 `calico.yaml`.
@@ -433,13 +433,13 @@ rbp4001.sungup.io   Ready    master          3h41m   v1.17.0
 rbp4002.sungup.io   Ready    <none>          20m     v1.17.0
 ```
 
-To add the role name on the node, you can run following command.
+To add the role name on the node, you can run this command.
 
 ```shell
 kubectl label node <node name> node-role.kubernetes.io/<role name>=<any name>;
 ```
 
-Also, you can remove role name using this.
+Also, you can remove the role name using this.
 
 ```shell
 kubectl label node <node name> node-role.kubernetes.io/<role name>-;
