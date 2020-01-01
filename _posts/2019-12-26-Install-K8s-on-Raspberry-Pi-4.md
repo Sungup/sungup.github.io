@@ -470,9 +470,10 @@ RestartSec=10
 
 ### Systemd generates many spam messages
 
-If you installed the **Calico** successfully, you can see a lot of log entries
-in `/var/log/systemd`. Every 10 seconds, **systemd** generate the mount success
-logs for `calico-node-<hash>` and `calico-kube-controllers-<hash>-<hash>` pods.
+If you installed the **Calico** successfully, you can see many log items in
+`/var/log/systemd`. Every 10 seconds, **systemd** generates many *mount success
+logs* for `calico-node-<hash>` and `calico-kube-controllers-<hash>-<hash>`
+pods.
 
 ```text
 Jan  1 20:23:41 rbp4001 systemd[5312]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.sirEMa.mount: Succeeded.
@@ -483,13 +484,13 @@ Jan  1 20:23:51 rbp4001 systemd[5312]: run-runc-3020876e4502948946dc68223d2eb57c
 Jan  1 20:23:51 rbp4001 systemd[1]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.uQmLJA.mount: Succeeded.
 ```
 
-From the [systemd logs filled with mount unit entries if healtcheck is enabled]
-article, it is very common problem running lots of Kubernetes pods. Some peoples
-guess that reason for the readyness/liveness probing mechanism, also this is the
-similar problem in my Raspberry Pi cluster.
+From the *[systemd logs filled with mount unit entries if healtcheck is enabled]
+article*, it is very common problem running lots of Kubernetes pods. Some
+peoples guess that reason as the readyness/liveness probing mechanism, and it
+looks also the similar problem in my Raspberry Pi cluster.
 
-I can't find the right solutions, but can apply helpful method from a comment
-by *gertjanklein*. Create and open file `/etc/rsyslog.d/01-blocklist.conf` and
+I can't find the right solutions, but can refer to a helpful comment by
+*gertjanklein*. Create and open file `/etc/rsyslog.d/01-blocklist.conf` and
 add following options.
 
 ```text
@@ -498,13 +499,13 @@ if $msg contains "run-runc-" and $msg contains ".mount: Succeeded." then {
 }
 ```
 
-After apply this config, restart rsyslog daemon.
+After apply this config, restart `rsyslog` daemon.
 
 ```shell
 sudo systemctl restart rsyslog;
 ```
 
-After this, no more mounting logs will be sotred at `/var/log/syslog`. But,
+After this, no more mounting logs will be stored at `/var/log/syslog`. But,
 **systemd** will store that in the journal log continuously. There is no
 way to avoid storing that log. So, you should clear the journal log
 periodically using **crontab**. Following string is the clearing log with
