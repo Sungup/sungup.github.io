@@ -177,7 +177,7 @@ sudo apt update;
 sudo apt install kubectl kubeadm kubelet;
 ```
 
-### Configure cgroup driver userd by kubelet on control-plane node
+### Configure cgroup driver used by kubelet on control-plane node
 
 ***Caution! This configuration has been deprecated. I'll change this setting to right
 way soon.***
