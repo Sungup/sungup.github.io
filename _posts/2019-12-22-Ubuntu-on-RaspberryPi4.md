@@ -155,7 +155,9 @@ And add the following entry using text editor. This command will erase old logs
 older than 2 days.
 
 ```text
-59 23 * * 0 journalctl -m --vacuum-time=2d
+59 23 * * 0 journalctl -m --rotate --vacuum-time=2d
+59 23 * * 0 find /var/log -name "*.gz" -type f -mtime +2 -exec rm -f {} \;
+59 23 * * 0 find /var/log -name "*.log.[0-9]*" -type f -mtime +2 -exec rm -f {} \;
 ```
 
 ## Reference

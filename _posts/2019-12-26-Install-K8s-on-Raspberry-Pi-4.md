@@ -270,10 +270,10 @@ other add-ons, please read the Kubernetes official documents.
 ### Download Calico YAML
 
 First of all, download `calico.yaml` file from the official site. The official
-document recommends the 3.8 version calico, but that version pod2daemon image
-has a Makefile bug and not working on the ARM64 architecture. So that reason,
-I use the 3.9, 3.10 or 3.11 calico YAML file. But, **DON'T RUN `kubectl apply`
-DIRECTLY!**
+document recommends the 3.8 version calico, but that version **pod2daemon**
+image has a Makefile bug and not working on the ARM64 architecture. So that
+reason, I use the 3.9, 3.10 or 3.11 calico YAML file. But, **DON'T RUN
+`kubectl apply` DIRECTLY!**
 
 ```shell
 # The stable version 3.8 at Dec. 29, 2019, but we use 3.11 image to run on
@@ -468,6 +468,52 @@ StartLimitInterval=0
 RestartSec=10
 ```
 
+### Systemd generates many spam messages
+
+If you installed the **Calico** successfully, you can see a lot of log entries
+in `/var/log/systemd`. Every 10 seconds, **systemd** generate the mount success
+logs for `calico-node-<hash>` and `calico-kube-controllers-<hash>-<hash>` pods.
+
+```text
+Jan  1 20:23:41 rbp4001 systemd[5312]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.sirEMa.mount: Succeeded.
+Jan  1 20:23:41 rbp4001 systemd[1]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.sirEMa.mount: Succeeded.
+Jan  1 20:23:45 rbp4001 systemd[5312]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.176ckI.mount: Succeeded.
+Jan  1 20:23:45 rbp4001 systemd[1]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.176ckI.mount: Succeeded.
+Jan  1 20:23:51 rbp4001 systemd[5312]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.uQmLJA.mount: Succeeded.
+Jan  1 20:23:51 rbp4001 systemd[1]: run-runc-3020876e4502948946dc68223d2eb57cc1effa900e8eacffe12582b5608c03b0-runc.uQmLJA.mount: Succeeded.
+```
+
+From the [systemd logs filled with mount unit entries if healtcheck is enabled]
+article, it is very common problem running lots of Kubernetes pods. Some peoples
+guess that reason for the readyness/liveness probing mechanism, also this is the
+similar problem in my Raspberry Pi cluster.
+
+I can't find the right solutions, but can apply helpful method from a comment
+by *gertjanklein*. Create and open file `/etc/rsyslog.d/01-blocklist.conf` and
+add following options.
+
+```text
+if $msg contains "run-runc-" and $msg contains ".mount: Succeeded." then {
+    stop
+}
+```
+
+After apply this config, restart rsyslog daemon.
+
+```shell
+sudo systemctl restart rsyslog;
+```
+
+After this, no more mounting logs will be sotred at `/var/log/syslog`. But,
+**systemd** will store that in the journal log continuously. There is no
+way to avoid storing that log. So, you should clear the journal log
+periodically using **crontab**. Following string is the clearing log with
+**journalctl**. **Crontab** will clear journal logs every Sunday 23:59.
+
+```text
+59 23 * * 0 journalctl -m --rotate --vacuum-time=2d
+```
+
 ## Reference
 
 - [Raspberry Pi 4 Ubuntu 19.10 cannot enable cgroup memory at bootstrap]
@@ -477,6 +523,8 @@ RestartSec=10
 - [Creating a Kind Cluster With Calico Networking]
 - [pod calico-node on worker nodes with 'CrashLoopBackOff']
 - [Failed to get kubelets cgroup]
+- [arm64 docker container contains x86_64 flexvol driver]
+- [systemd logs filled with mount unit entries if healtcheck is enabled]
 
 [Raspberry Pi 4 Ubuntu 19.10 cannot enable cgroup memory at bootstrap]: https://askubuntu.com/questions/1189480/raspberry-pi-4-ubuntu-19-10-cannot-enable-cgroup-memory-at-boostrap
 [Container runtimes]: https://kubernetes.io/docs/setup/production-environment/container-runtimes
@@ -485,3 +533,5 @@ RestartSec=10
 [Creating a Kind Cluster With Calico Networking]: https://alexbrand.dev/post/creating-a-kind-cluster-with-calico-networking/
 [pod calico-node on worker nodes with 'CrashLoopBackOff']: https://github.com/projectcalico/calico/issues/2720
 [Failed to get kubelets cgroup]: https://stackoverflow.com/questions/57456667/failed-to-get-kubelets-cgroup
+[arm64 docker container contains x86_64 flexvol driver]: https://github.com/projectcalico/pod2daemon/issues/17
+[systemd logs filled with mount unit entries if healtcheck is enabled]: https://github.com/docker/for-linux/issues/679
