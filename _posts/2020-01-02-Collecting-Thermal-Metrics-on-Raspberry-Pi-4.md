@@ -7,6 +7,11 @@ tags: [ubuntu, raspberry pi 4, prometheus, grafana, thermal]
 date: 2020-01-02 22:14:00
 ---
 
+Raspberry Pi 4를 사용한 Cluster 상에서 온도 모니터링 방법을 정리했습니다. **node_exporter**의
+**textile_collector**와 **crontab**을 활용하는 방법을 참고해서 작성했습니다. 단, **crontab** 자체의
+Resolution 문제로 분단위로 확보되는 형태를 취하고 있으며, 이보다 더 높은 Resolution의 경우 좀더 민첩한 프로그램언어를
+작성해서 **systemd** 서비스로 등록하는 것을 추천합니다. (추후 진행해 볼 예정입니다. :) )
+
 ## Installing vcgencmd
 
 Collecting GPU temperature, you need to install an useful tool `vcgencmd` in
