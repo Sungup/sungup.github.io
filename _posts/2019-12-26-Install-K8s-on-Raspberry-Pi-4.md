@@ -258,13 +258,37 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config;
 sudo chown $(id -u):$(id -g) $HOME/.kube/config;
 ```
 
-## Installing a pod network add-on with Calico
+## Install a pod network add-on
 
 You should install a pod network add-on for the communication with each other.
-In this article, I explane installation using the `Calico` add-on. For the
-other add-ons, please read the Kubernetes official documents.
+At the first time, I tried to install `Calico` and installed that successful.
+But, the Calico on the Raspberry Pi was unstable and many pods restart many
+times. So that I reset all cluster and did re-install with `Flannel`.
 
-### Download Calico YAML
+Currently my network environment is based on the Flannel, but I keep the
+section about the Calico. If you try the Calico on your Raspberry Pi, I want
+that section can be helpful for you.
+
+### Installig Flannel
+
+Installing `Flannel` is very simple if you track this article. The Flannel
+requires the specific pod network and must set the bridge-nf-call-iptables
+to 1 to pass bridged IPv4 traffic to iptable's chains. But, our configuration
+values are based on the Flannel recommendation, thus you can run following
+command.
+
+```shell
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml;
+```
+
+### Installing Calico
+
+Calico is also good solution for the common k8s environment. To install on the
+Raspberry Pi, you should fix many values in the yaml file not only the image's
+path, but other values like **CIDR**, **ip autodetection method**, and
+**ignoring loose RPF**.
+
+#### Download Calico YAML
 
 First of all, download `calico.yaml` file from the official site. The official
 document recommends the 3.8 version calico, but that version **pod2daemon**
@@ -278,7 +302,7 @@ reason, I use the 3.9, 3.10 or 3.11 calico YAML file. But, **DON'T RUN
 wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml;
 ```
 
-### Modify YAML to run Calico on Raspberry Pi
+#### Modify YAML to run Calico on Raspberry Pi
 
 Before apply the `calico.yaml` file, we should change the following 4 items.
 
@@ -287,7 +311,7 @@ Before apply the `calico.yaml` file, we should change the following 4 items.
 3. Add `IP_AUTODETECTION_METHOD` environment value with `interface=wlan0`.
 4. Add `FELIX_IGNORELOOSERPF` environment value with `true`.
 
-#### Change image fields
+##### Change image fields
 
 Different from default Docker environment, our ubuntu + cri-o environment
 doesn't have default registry value in `/etc/crio/crio.conf`. So that, we
@@ -297,13 +321,13 @@ to `quay.io`, because the calico images from that registry support only the
 amd64/x86 architecture. We need the arm64 images to run on the Raspberry Pi,
 add the `docker.io` to download arm64 based images.
 
-#### Change CALICO_IPV4POOL_CIDR
+##### Change CALICO_IPV4POOL_CIDR
 
 We already set the CIDR with `10.244.0.0/16`, but the default pod-network for
 the calico is `192.168.0.0/16`. So that, we should match the CIDR between
 `kubeadm init` and `calico.yaml`.
 
-#### Add IP_AUTODETECTION_METHOD (Only for the WLAN interface)
+##### Add IP_AUTODETECTION_METHOD (Only for the WLAN interface)
 
 Through the all post for Raspberry Pi 4, I had set the main network interface
 to the `wlan0` not `eth0` because of lack of the home network switch`s port.
@@ -314,7 +338,7 @@ To solve this problem, I must set the `IP_AUTODETECTION_METHOD` to make the
 use the wlan0 as the default network like me, please check the YAML configs
 the end of this calico sub-article.
 
-#### Add FELIX_IGNORELOOSERPF (Optional)
+##### Add FELIX_IGNORELOOSERPF (Optional)
 
 Calico's node pods will not be READY to `1/1` in spite of `Running` state. I
 saw an article for Calico from [Creating a Kind Cluster With Calico Networking]
@@ -325,7 +349,7 @@ You can see the RPF setting value in `/proc/sys/net/ipv4/conf/all/rp_filter`
 may be set with 2 as **loose** RPF. ~~I didn't set that value to 1, but guess
 this method is better than changing the `FELIX_IGNORELOOSERPF` directly.~~
 
-#### Differences between original and modified YAML
+##### Differences between original and modified YAML
 
 Following **diff** contents is the changed values from the original
 `calico.yaml`.
@@ -391,7 +415,7 @@ Following **diff** contents is the changed values from the original
              - name: ENABLED_CONTROLLERS
 ```
 
-### Apply calico.yaml
+#### Apply calico.yaml
 
 ```shell
 # Open firewall port for Calico
@@ -465,6 +489,18 @@ StartLimitInterval=0
 RestartSec=10
 ```
 
+### Join the additional node after the init token expired
+
+By default, the original token by `kubeadm init` must be expired after 24
+hours. So, if you want to add more nodes, you should generate the new token
+and run the `kubeadm join` with that new token.
+
+The easiest way to create a token and the join command is this.
+
+```shell
+kubeadm token create --print-join-command;
+```
+
 ### Systemd generates many spam messages
 
 If you installed the **Calico** successfully, you can see many log items in
@@ -533,3 +569,4 @@ periodically using **crontab**. Following string is the clearing log with
 [Failed to get kubelets cgroup]: https://stackoverflow.com/questions/57456667/failed-to-get-kubelets-cgroup
 [arm64 docker container contains x86_64 flexvol driver]: https://github.com/projectcalico/pod2daemon/issues/17
 [systemd logs filled with mount unit entries if healtcheck is enabled]: https://github.com/docker/for-linux/issues/679
+[Join cluter after init token expired]: https://stackoverflow.com/questions/47126779/join-cluster-after-init-token-expired
