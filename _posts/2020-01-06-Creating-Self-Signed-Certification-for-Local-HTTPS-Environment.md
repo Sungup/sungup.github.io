@@ -15,8 +15,8 @@ certification file of the other app example.
 ## Create root certification file
 
 First of all generate the root private key and certification file. You must
-enter the passphrase while generating the root key file. *(my.domain is the
-example domain. Pleash change that to your domain name.)*
+enter the passphrase while generating the root key file. *(**my.domain** is the
+example domain. Please change that to your domain name.)*
 
 ```bash
 # Generate private key for root-cert
@@ -76,8 +76,9 @@ cat example.com.ext.template \
     | sed "s/example.ip/XX.XX.XX.XX/" > k8s.my.domain.ext;
 
 # Generate the certification file for the sub-domain
-openssl x509 -req -in k8s.my.domain.csr -CA my.domain.pem -CAkey my.domain.key \
-    -CAcreateserial -days 1825 -sha256 -extfile k8s.my.domain.ext \
+openssl x509 -req -in k8s.my.domain.csr \
+    -CA my.domain.pem -CAkey my.domain.key -CAcreateserial \
+    -days 1825 -sha256 -extfile k8s.my.domain.ext \
     -out k8s.my.domain.crt;
 ```
 
