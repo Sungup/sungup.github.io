@@ -227,4 +227,4 @@ kubectl describe secret {secret-name};
 [Kubernetes Metal LB for On-Prem / BareMetal Cluster in 10 minutes]: https://medium.com/@JockDaRock/kubernetes-metal-lb-for-on-prem-baremetal-cluster-in-10-minutes-c2eaeb3fe813
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
-[Installing Ingress-Nginx on the Private Network]: /2020/01/07/Install-Ingress-Nginx-on-the-Private-Network.html
+[Installing Ingress-Nginx on the Private Network]: /2020/01/07/Installing-Ingress-Nginx-on-the-Private-Network.html
