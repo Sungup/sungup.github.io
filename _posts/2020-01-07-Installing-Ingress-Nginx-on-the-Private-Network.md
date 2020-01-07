@@ -10,14 +10,15 @@ date: 2020-01-07 00:00:00
 I'll explain the next stage **"Installing Ingress on the Private Network"**. If
 you want access the dashboard, you can choose a method from two way, (1) run the
 `kube-proxy`, or (2) connect the dashboard to the ingress load-balancer. For
-the first method, we always run the kube-proxy on the terminal, but you can't
+the first method, you always run the kube-proxy on the terminal, but you can
 login from localhost only, or apply complex settings. If you want access the
-dashboard from the remote PC, you connect the dashboard to the `Ingress-Nginx`.
+dashboard from the remote PC, you connect the dashboard to the `Ingress-Nginx`
+load-balancer.
 
-*Also, you can change the `ClusterIP` to `NodePort` directly for the dashboard.
+*(Also, you can change the `ClusterIP` to `NodePort` directly for the dashboard.
 In this case, the dahsboard occupy a port on the a server port. To share the
 80/443 web port through all web service, using `Ingress-Nginx` is better
-solution.*
+solution.)*
 
 1. *[Creating Self-Signed Certification for Local HTTPS Environment]*
 2. **[Installing Ingress-Nginx on the Private Network]**
@@ -25,8 +26,8 @@ solution.*
 
 ## Install Ingress Controller
 
-To install the `Ingress` on our Raspberry Pi, download following files with
-following command. The latest version at 2020/01/07 is **nginx-0.26.2**.
+To install the `Ingress` on our Raspberry Pi, download a yaml file with the
+following command. *(The latest version at 2020/01/07 is **nginx-0.26.2**.)*
 
 ```shell
 wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.26.2/deploy/static/mandatory.yaml
@@ -66,16 +67,19 @@ apply the pure software solution, like `MetalLB`, or export `NodePort` through
 all service node. I'll describe the details about the ingress near future.
 
 Anyway, I tried applying **MetalLB** in my home network. MetalLB also had been
-installed successfully, but worked fine only 10 minutes. If some wifi device
+installed successfully, but worked fine only 10 minutes. If some WIFI device
 connected with my home network switch, the links, between the metallb
-controller and home devices, has been reset. Finally, remove the metallb and
-simply export all NodePorts.
+controller and home devices, has been reset and I couldn't connect through the
+ingress-nginx. Finally, remove the metallb and simply export all NodePorts
+currently.
 
-You can download the service YAML file from the following link.
+To open the ingress load balancer service, you can download the service YAML
+file from the following link. But, the linked file will not working with our
+purpose, so we need to change the contents by the load-balancing environment.
 
 <https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/service-nodeport.yaml>
 
-### Use nodeport
+### Using NodePort
 
 To open service with **NodePort**, make a YAML file and store following
 contents. From default service YAML file, just add the `externalIPs` array to
@@ -103,7 +107,7 @@ After saving the changes, apply the service YAML file.
 kubectl apply -f service-nodeport.yaml;
 ```
 
-### Use MetalLB
+### Using MetalLB
 
 #### Install MetalLB
 
@@ -171,11 +175,14 @@ After save the config map and apply that.
 kubectl apply -f metallb-configmap.yaml;
 ```
 
+If you want setup more customized, please read the official documents,
+"[Bare-metal considerations]".
+
 #### Requesting Specific IP
 
-Different from `NodeExport` method, just change the type from `NodePort` to
+Different from `NodeExport`, just change the type from `NodePort` to
 `LoadBalancer`. Don't add `externalIP` field. If the metallb works fine,
-metallb assign the new IP to the ingress-nginx service.
+metallb will assign the new IP to the ingress-nginx service.
 
 ```diff
 --- service-nodeport.yaml       2020-01-07 22:34:38.827830196 +0900
