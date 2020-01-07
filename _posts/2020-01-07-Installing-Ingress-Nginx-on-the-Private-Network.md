@@ -19,8 +19,8 @@ In this case, the dahsboard occupy a port on the a server port. To share the
 80/443 web port through all web service, using `Ingress-Nginx` is better
 solution.*
 
-1. **[Creating Self-Signed Certification for Local HTTPS Environment]**
-2. *[Installing Ingress on the Private Network]*
+1. *[Creating Self-Signed Certification for Local HTTPS Environment]*
+2. **[Installing Ingress-Nginx on the Private Network]**
 3. *Installing Kubernetes Dashboard*
 
 ## Install Ingress Controller
@@ -71,9 +71,9 @@ connected with my home network switch, the links, between the metallb
 controller and home devices, has been reset. Finally, remove the metallb and
 simply export all NodePorts.
 
-You can download the service YAML file from the following URL:
+You can download the service YAML file from the following link.
 
-https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/service-nodeport.yaml
+<https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/service-nodeport.yaml>
 
 ### Use nodeport
 
@@ -227,4 +227,4 @@ kubectl describe secret {secret-name};
 [Kubernetes Metal LB for On-Prem / BareMetal Cluster in 10 minutes]: https://medium.com/@JockDaRock/kubernetes-metal-lb-for-on-prem-baremetal-cluster-in-10-minutes-c2eaeb3fe813
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
-[Installing Ingress on the Private Network]: /2020/01/07/Install-Ingress-on-the-Private-Network.html
+[Installing Ingress-Nginx on the Private Network]: /2020/01/07/Install-Ingress-Nginx-on-the-Private-Network.html

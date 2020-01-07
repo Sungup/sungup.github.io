@@ -13,7 +13,7 @@ certification is better solution to reduce making and registering each
 certification file of the other app example.
 
 1. **[Creating Self-Signed Certification for Local HTTPS Environment]**
-2. *[Installing Ingress on the Private Network]*
+2. *[Installing Ingress-Nginx on the Private Network]*
 3. *Installing Kubernetes Dashboard*
 
 ## Create root certification file
@@ -111,4 +111,4 @@ in Safari, now you can access the self-signed pages without any fault message.
 [Brad Touesnard's article]: https://deliciousbrains.com/https-locally-without-browser-privacy-errors/#creating-self-signed-certificate
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
-[Installing Ingress on the Private Network]: /2020/01/07/Install-Ingress-on-the-Private-Network.html
+[Installing Ingress-Nginx on the Private Network]: /2020/01/07/Install-Ingress-Nginx-on-the-Private-Network.html
