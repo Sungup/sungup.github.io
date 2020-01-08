@@ -2,7 +2,7 @@
 layout: post
 title: Installing Ingress-Nginx on the Private Network
 author-id: sungup
-#feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2020-01-08-k8s-dashboard-feature.jpeg"
 tags: [kubernetes, ingress-nginx, metallb, load balancer]
 date: 2020-01-07 00:00:00
 ---
@@ -22,7 +22,7 @@ solution.)*
 
 1. *[Creating Self-Signed Certification for Local HTTPS Environment]*
 2. **[Installing Ingress-Nginx on the Private Network]**
-3. *Installing Kubernetes Dashboard*
+3. *[Install and Access Kubernetes Dashboard]*
 
 ## Install Ingress Controller
 
@@ -235,3 +235,4 @@ kubectl describe secret {secret-name};
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
 [Installing Ingress-Nginx on the Private Network]: /2020/01/07/Installing-Ingress-Nginx-on-the-Private-Network.html
+[Install and Access Kubernetes Dashboard]: /2020/01/08/Install-and-Access-Kubernetes-Dashboard.html

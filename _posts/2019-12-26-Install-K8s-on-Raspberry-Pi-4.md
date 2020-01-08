@@ -2,7 +2,7 @@
 layout: post
 title: Install Kubernetes on Raspberry Pi 4
 author-id: sungup
-#feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2020-01-08-k8s-dashboard-feature.jpeg"
 tags: [ubuntu, raspberry pi 4, kubernetes, cri-o, container]
 date: 2019-12-26 00:00:00
 ---

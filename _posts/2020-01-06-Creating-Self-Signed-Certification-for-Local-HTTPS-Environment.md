@@ -2,7 +2,7 @@
 layout: post
 title: Creating Self-Signed Certification for Local HTTPS Environment
 author-id: sungup
-#feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
+feature-img: "assets/img/posts/2020-01-08-k8s-dashboard-feature.jpeg"
 tags: [certification, self-signed, HTTPS]
 date: 2020-01-06 00:00:00
 ---
@@ -14,7 +14,7 @@ certification file of the other app example.
 
 1. **[Creating Self-Signed Certification for Local HTTPS Environment]**
 2. *[Installing Ingress-Nginx on the Private Network]*
-3. *Installing Kubernetes Dashboard*
+3. *[Install and Access Kubernetes Dashboard]*
 
 ## Create root certification file
 
@@ -112,3 +112,4 @@ in Safari, now you can access the self-signed pages without any fault message.
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
 [Installing Ingress-Nginx on the Private Network]: /2020/01/07/Installing-Ingress-Nginx-on-the-Private-Network.html
+[Install and Access Kubernetes Dashboard]: /2020/01/08/Install-and-Access-Kubernetes-Dashboard.html

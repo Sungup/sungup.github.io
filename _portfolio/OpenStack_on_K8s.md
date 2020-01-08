@@ -4,7 +4,7 @@ title: OpenStack on K8s Study
 date: 11-06-2019
 feature-img: "assets/img/pexels/computer.jpeg"
 img: "assets/img/portfolio/OpenStack_on_K8s.png"
-tags: [OpenStack, Kubernetes, StarlingX]
+tags: [openstack, kubernetes, StarlingX]
 ---
 
 I have joined a group seminar about the OpenStack on Kubernetes. OpenStack has
