@@ -219,7 +219,7 @@ kubectl describe secret {secret-name};
 ### Ingress Official
 
 - [Installation Guide]
-- [Bare-metal consideration]
+- [Bare-metal considerations]
 
 ### Other Site
 

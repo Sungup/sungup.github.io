@@ -2,6 +2,7 @@
 layout: post
 title: Ubuntu on Raspberry Pi 4
 author-id: sungup
+feature-img: "assets/img/posts/2019-12-22-ubuntu-on-rasbpi4.jpeg"
 tags: [ubuntu, raspberry pi 4]
 date: 2019-12-22 19:13:59
 ---
