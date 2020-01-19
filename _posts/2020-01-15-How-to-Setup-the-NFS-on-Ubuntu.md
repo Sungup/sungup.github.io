@@ -21,9 +21,9 @@ permanently. Following image is my private registry service environment.
 
 And, following contents will be posted.
 
-- [How to Setup the NFS on Ubuntu]
-- Install and setup registry with SSL
-- Build and push image in the private registry
+- **[How to Setup the NFS on Ubuntu]**
+- *[Build the Private Registry with the NFS Volume]*
+- *Build and push image in the private registry*
 
 ## Format and mount the large USB storage
 
@@ -107,6 +107,16 @@ sudo exportfs -a;
 sudo systemctl restart nfs-kernel-server;
 ```
 
+## Apply nfs client on all servers
+
+Before apply registry you must install `nfs-common` to mount nfs volume to the
+registry pods. Without `nfs-common`, my Raspberry Pi 4 clusters cannot start
+and pending on the state of `ContainerCreating`.
+
+```shell
+sudo apt install -y nfs-common;
+```
+
 ## Reference
 
 - [Install NFS Server and Client on Ubuntu 18.04 LTS]
@@ -115,8 +125,9 @@ sudo systemctl restart nfs-kernel-server;
 
 [Install NFS Server and Client on Ubuntu 18.04 LTS]: https://vitux.com/install-nfs-server-and-client-on-ubuntu/
 [NFS 설치 및 설정]: https://darksoulstory.tistory.com/9
-
 [exports(5) - Linux man page]: https://linux.die.net/man/5/exports
+
 [How to Setup the NFS on Ubuntu]: /2020/01/15/How-to-Setup-the-NFS-on-Ubuntu.html
+[Build the Private Registry with the NFS Volume]: /2020/01/19/Build-the-Private-Registry-with-the-NFS-Volume.html
 
 [nfs-01]: /assets/img/posts/2020-01-13-nfs-01.png

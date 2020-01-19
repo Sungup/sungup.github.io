@@ -36,6 +36,26 @@ you system. Copy the `my.domain.pem` file on your PC. In my case, I use
 `Keychain Access` on my MacBook and register certification file on the system
 directory.
 
+We also use this root cert file for the private registry, convert `.pem` to
+`.crt` file using followind commands.
+
+```shell
+openssl x509 -inform PEM -in my.domain.pem -outform DER -out my.domain.der;
+openssl x509 -inform DER -in my.domain.der -out my.domain.crt;
+```
+
+After making `.crt` file, copy that to each nodes and register that as a
+trusted root certificatates on each nodes.
+
+```shell
+sudo cp my.domain.crt /usr/local/share/ca-certificates/my.domain.crt;
+sudo update-ca-certificates;
+
+# Restart crio daemon to pull and push images to private registry with the new
+# certification file.
+sudo systemctl restart crio;
+```
+
 ## Create CA-Signed certification for the local sites
 
 Next we generate the local site certification file. I'll use that certification
@@ -104,11 +124,15 @@ in Safari, now you can access the self-signed pages without any fault message.
 - [How to Create Your Own SSL Certificate Authority for Local HTTPS Development]
 - [How to Set Up HTTPS Locally Without Getting Annoying Browser Privacy Errors]
 - [Fixing Safari's 'can't establish a secure connection' when updating a self-signed certificate]
+- [Adding trusted root certificates to the server]
+- [인증서 형식 변환하기(PEM, DER, CRT, KEY)]
 
 [How to Create Your Own SSL Certificate Authority for Local HTTPS Development]: https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
 [How to Set Up HTTPS Locally Without Getting Annoying Browser Privacy Errors]: https://deliciousbrains.com/https-locally-without-browser-privacy-errors/
 [Fixing Safari's 'can't establish a secure connection' when updating a self-signed certificate]: https://www.jeffgeerling.com/blog/2018/fixing-safaris-cant-establish-secure-connection-when-updating-self-signed-certificate
 [Brad Touesnard's article]: https://deliciousbrains.com/https-locally-without-browser-privacy-errors/#creating-self-signed-certificate
+[Adding trusted root certificates to the server]: https://manuals.gfi.com/en/kerio/connect/content/server-configuration/ssl-certificates/adding-trusted-root-certificates-to-the-server-1605.html
+[인증서 형식 변환하기(PEM, DER, CRT, KEY)]: https://88240.tistory.com/38
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
 [Installing Ingress-Nginx on the Private Network]: /2020/01/07/Installing-Ingress-Nginx-on-the-Private-Network.html
