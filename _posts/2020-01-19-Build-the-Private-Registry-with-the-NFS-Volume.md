@@ -8,11 +8,11 @@ date: 2020-01-19 00:00:00
 ---
 
 Now we build the private registry. The private registry is very helpful, if you
-run the kubernetes cluster in the dedicated network or test the your built
-micro- service before publishing. But, the default deploy config of the docker-
-registry uses **emptyDir** and it cannot keep the registry volumes. To keep the
-uploaded images permanently, the image data should be stored on the persistent
-volumes like Ceph, NFS, iSCSI, and etc...
+run the kubernetes cluster in the dedicated network or test your built
+micro-service before publishing. But, the default deploy config of the
+docker-registry uses **emptyDir** and it cannot keep the registry volumes. To
+keep the uploaded images permanently, the image data should be stored on the
+persistent volumes like Ceph, NFS, iSCSI, and etc...
 
 In this article, setup the PV *(persistent volume)* and PVC *(persistent volume
 claim)* and attatch that volumes to the registry service.
@@ -33,10 +33,10 @@ Pod is a request about the CPU resource from a node, PVC is a request about the
 PV resource with specific size and access modes.
 
 Anyway, we will define the PV and allocate the PVC for the registry pods. To
-distinquish it from other services, we use a specific namespace of **kubernetes
--registry**. Also, we set the size of the **pv-registry** PV to 100GiB and
-assign all of space of the **pv-registry** to the **pvc-registry** PVC. This
-PV and PVC will be used by the private registry only, so we set the
+distinquish it from other services, we use a specific namespace of
+**kubernetes-registry**. Also, we set the size of the **pv-registry** PV to
+100GiB and assign all of space of the **pv-registry** to the **pvc-registry**
+PVC. These PV and PVC will be used by the private registry only, so we set the
 **accessModes** with **ReadWriteOnce**. Make `registry-volume.yaml` file and
 save with following configurations.
 
@@ -96,12 +96,12 @@ pvc-registry   Bound    pv-registry   100Gi      RWO            sc-registry    4
 ## Define deployment and service
 
 Now, we define the deployment and service for the registry pods. I has
-a document **[Docker Registry]** article in the example of **NGINX Ingress
-Controller**. The default values of `REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY`
-and `REGISTRY_HTTP_ADDR` are `/var/lib/registry` and `:5000`, so you can erase
-the **env** field of follwing deployment section. But, you should sync the
-port number between **spec.template.spec.containers.ports.containerPort** and
-`REGISTRY_HTTP_ADDR`.
+referenced a document **[Docker Registry]** article in the example of **NGINX
+Ingress Controller**. The default values of `REGISTRY_HTTP_ADDR` and
+`REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY` are `/var/lib/registry` and
+`:5000`, so you can erase the **env** field of follwing deployment section.
+But, you should sync the port number between and `REGISTRY_HTTP_ADDR`
+**spec.template.spec.containers.ports.containerPort**.
 
 To mount the PVC to pods, define **spec.template.spec.volumes** with the PVC's
 **claimName**. K8s will mount the volume, which has claim name with
@@ -176,10 +176,10 @@ kubectl apply -f registry-service.yaml;
 
 ## Export registry service through ingress
 
-At the final step, we export the registry service through ingress. Before
-applying ingress config, we should make the self-signed certification file and
-register that to the **kubernetes-registry** namespace. Please read the
-following articles.
+At the final step, we export the registry service through the ingress service.
+Before applying the ingress config, we should make the self-signed cert file
+and register that to the **kubernetes-registry** namespace. Please read the
+following articles for the detail procedure.
 
 - [Creating Self-Signed Certification for Local HTTPS Environment]:
 - [Installing Ingress-Nginx on the Private Network]:
