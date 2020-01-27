@@ -19,7 +19,7 @@ claim)* and attatch that volumes to the registry service.
 
 - *[How to Setup the NFS on Ubuntu]*
 - **[Build the Private Registry with the NFS Volume]**
-- *Build and push image in the private registry*
+- *[How to Build Container with Buildah]*
 
 ## Make PV and PVC for registry
 
@@ -247,6 +247,7 @@ kubectl apply -f registry-ingress.yaml;
 
 [How to Setup the NFS on Ubuntu]: /2020/01/15/How-to-Setup-the-NFS-on-Ubuntu.html
 [Build the Private Registry with the NFS Volume]: /2020/01/19/Build-the-Private-Registry-with-the-NFS-Volume.html
+[How to Build Container with Buildah]: /2020/01/27/How-to-Build-Container-with-Buildah.html
 
 [Creating Self-Signed Certification for Local HTTPS Environment]: /2020/01/06/Creating-Self-Signed-Certification-for-Local-HTTPS-Environment.html
 [Installing Ingress-Nginx on the Private Network]: /2020/01/07/Installing-Ingress-Nginx-on-the-Private-Network.html

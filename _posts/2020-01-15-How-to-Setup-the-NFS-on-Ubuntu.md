@@ -23,7 +23,7 @@ And, following contents will be posted.
 
 - **[How to Setup the NFS on Ubuntu]**
 - *[Build the Private Registry with the NFS Volume]*
-- *Build and push image in the private registry*
+- *[How to Build Container with Buildah]*
 
 ## Format and mount the large USB storage
 
@@ -129,5 +129,6 @@ sudo apt install -y nfs-common;
 
 [How to Setup the NFS on Ubuntu]: /2020/01/15/How-to-Setup-the-NFS-on-Ubuntu.html
 [Build the Private Registry with the NFS Volume]: /2020/01/19/Build-the-Private-Registry-with-the-NFS-Volume.html
+[How to Build Container with Buildah]: /2020/01/27/How-to-Build-Container-with-Buildah.html
 
 [nfs-01]: /assets/img/posts/2020-01-13-nfs-01.png

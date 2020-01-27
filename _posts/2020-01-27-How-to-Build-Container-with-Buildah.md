@@ -1,32 +1,42 @@
 ---
 layout: post
-title: Install Kubernetes on Raspberry Pi 4
+title: How to Build Container with Buildah
 author-id: sungup
 #feature-img: "assets/img/posts/2019-12-23-prometheus-and-grafana-banner.jpeg"
-tags: [ubuntu, raspberry pi 4, kubernetes, cri-o, container]
-date: 2019-12-26 00:00:00
+tags: [ubuntu, raspberry pi 4, kubernetes, cri-o, container, buildah]
+date: 2020-01-27 00:00:00
 ---
 
-이번에는 crio 환경에서 컨테이너 이미지를 빌드를 하고 이를 private repository에 올리는 방법을 정리합니다. crio의
-기본설정에서 private registry를 설정해 둘 수 있지만, 라즈베리 파이에서 quay, docker.io와 함께 사용하기 위해서는
-선택적으로 활용해야 하기 때문에 crio의 설정은 기본 설정으로 놔 둔 상태이서 진행합니다. 
+In this post, I'll explain how to build a container using `buildah` and upload
+that into the private registry. We can set the default registry in the crio's
+config file, but this method is not good because some images doesn't matched
+for the arm64 environment system even if that had been provided from quay or
+docker.io. So that reason, we keep the blank default registry settings.
 
-단, crio의 환경은 일반 docker와 달리 컨테이너를 실행하는 `crictl`과 빌드를 담당하는 `buildah`가 분리되어 있어
-별도의 패키지를 설치해야 합니다.
+- *[How to Setup the NFS on Ubuntu]*
+- *[Build the Private Registry with the NFS Volume]*
+- **[How to Build Container with Buildah]**
 
-*관련 포스트 링크*
+## Install buildah
 
-# Install buildah
-
-앞서 **crio** 를 설치한 repository를 통해 buiildah를 설치합니다.
+Different from Docker, the running tools and build tools is divided into the
+`crictl` and the `buildah`, so we need to install the `buildah`. That package
+is provided from the project atomic repository, already installed for the crio,
+simply run following command.
 
 ```bash
 sudo apt install -y buildah;
 ```
 
-**buildah**의 설치에 성공하였더라도 일부 Dockerfile로는 컨테이너 이미지를 만들 수 없습니다. 한 예로, 아래와 같이
-컨테이너 생성을 위해 일부 명령어의 실행이 필요한 경우, ubuntu환경의 buildah는 컨테이너 실행을 위한 **runc**를 찾을
-수 없어 이미지 생성에 실패하게 됩니다.
+Even if you installed `buildah` successfully, some Dockerfile script can't
+build a container image. For example, some **Dockerfile** script should run
+package install command like **dnf** or **apt** for the pre-built libraries.
+However if you ran that **Dockerfile** script, `buildah` try to search and
+run the `runc`, but can't find that in the default **PATH** environment and
+will be failed. The `runc` is the core engine to run container in the CRI-O,
+so `buildah` should use that to run some commands in Dockerfile while building
+the custom images. Following **Dockerfile** is that example file. If you run
+this Dockerfile without runc, you can see the following error logs.
 
 ```dockerfile
 FROM docker.io/fedora:latest
@@ -48,21 +58,26 @@ STEP 2: MAINTAINER Sungup Moon
 STEP 3: RUN dnf install cmake make clang;
 error running container: error creating container for [/bin/sh -c dnf install cmake make clang;]: : exec: "runc": executable file not found in $PATH
 error building at STEP "RUN dnf install cmake make clang;": error while running runtime: exit status 1
-ERRO[0095] exit status 1                                
+ERRO[0095] exit status 1
 ```
 
-따라서, **buildah**는 실행 시 **runc**를 반드시 참조해야 합니다 **runc**는 앞서 설치한 **crio**설치시
-`/usr/lib/cri-o-runc/sbin/runc`에 이미 설치되어 있어, 해당 파일을 아래 명령어로 `/usr/local/bin`에
-링크로 연결합니다.
+To reference the `runc`, you need to run following command. Fortunately, the
+runc had been installed at `/usr/lib/cri-o-runc/sbin/runc` when you installed
+**CRI-O**, so you can make link that file into `/usr/local/bin` simply.
 
 ```shell
 sudo ln -s /usr/lib/cri-o-runc/sbin/runc /usr/local/bin/runc;
 ```
 
+However, if you don't have a `RUN` section in your Dockerfile for the custom
+image, you can skip this making link step! :-)
+
 ## Make example using buildah
 
-**buildah**를 설치한 다음 새 디렉토리를 만들어 `index.html`와 `Dockerfile`을 만들고 아래와 같은 파일을
-준비합니다.
+Now, we build an example container image to test building and pushing container
+into our private registry. In this post, we make a very very simple web page
+using **nginx** image. Make a new directory and make `index.html` and
+`Dockerfile` with following contents.
 
 ```html
 <!DOCTYPE html>
@@ -84,8 +99,9 @@ MAINTAINER Sungup Moon
 COPY index.html /usr/share/nginx/html
 ```
 
-파일 생성 후 아래 명령어로 컨테이너 이미지를 생성후 업로드 합니다. buildah는 사용자 계정별로 이미지를 생성할 수 있기 때문에,
-`sudo`와 같은 명령어는 필요로 하지 않습니다.
+After making two files, run following commands to build and push our image.
+The `buildah` can run in any user account, so you don't need to run with
+`sudo` to get root privileges.
 
 ```shell
 buildah build-using-dockerfile -t {registry address}/hello .;
@@ -93,13 +109,13 @@ buildah push {registry address}/hello;
 ```
 
 You can check the container images using following command. Also, you can
-remove images already uploaded on the private registry.
+remove images already uploaded from the local registry.
 
 ```text
 $ buildah images
 REPOSITORY                  TAG      IMAGE ID       CREATED         SIZE
 {registry address}/hello2   latest   6c30e001557f   2 minutes ago   24.1 MB
-docker.io/library/nginx     alpine   c2efcb34277e   2 days ago      24.1 MB          
+docker.io/library/nginx     alpine   c2efcb34277e   2 days ago      24.1 MB
 $ buildah rmi {registry address}/hello2 docker.io/library/nginx:alpine
 untagged: {registry address}/hello2:latest
 6c30e001557fdb7b812d514026e4d8cc3ccb5c7365071c179e5534c13c4b9a67
@@ -109,8 +125,8 @@ c2efcb34277e5f88b5775b976153d5e1b6be87499e2b1f4e30110db5aab48ef4
 
 ## Start example service with the new container
 
-Now we start service with the new built image. Make the deploy and service YAML
-file and apply that.
+Now we start service with the new image. Make the deploy and service YAML file
+and apply that.
 
 ```yaml
 apiVersion: apps/v1
@@ -201,12 +217,12 @@ Accept-Ranges: bytes
 
 ## Reference
 
-- [Docker Image를 활용한 Local Registry 구축]
-
-[Docker Image를 활용한 Local Registry 구축]: https://waspro.tistory.com/532
-[Volumes]: https://kubernetes.io/docs/concepts/storage/volumes/
-[PersistentVolume / PersistentVolumeClaim / StorageClassについて]: https://cstoku.dev/posts/2018/k8sdojo-12/
-[Kubernetes Control-Plane Node에 Pod 띄울수 있는 방법 (Taints)]: https://17billion.github.io/kubernetes/2019/04/24/kubernetes_control_plane_working.html
+- [buildah]
+- [nginx: Docker Official Images]
 
 [buildah]:https://github.com/containers/buildah/blob/master/install.md
-[Steps To Build Apache Web Server Docker Image]: https://medium.com/@vi1996ash/steps-to-build-apache-web-server-docker-image-1a2f21504a8e
+[nginx: Docker Official Images]: https://hub.docker.com/_/nginx
+
+[How to Setup the NFS on Ubuntu]: /2020/01/15/How-to-Setup-the-NFS-on-Ubuntu.html
+[Build the Private Registry with the NFS Volume]: /2020/01/19/Build-the-Private-Registry-with-the-NFS-Volume.html
+[How to Build Container with Buildah]: /2020/01/27/How-to-Build-Container-with-Buildah.html
