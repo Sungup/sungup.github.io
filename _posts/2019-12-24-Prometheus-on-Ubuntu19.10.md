@@ -62,7 +62,32 @@ prometheus server.
 sudo systemctl restart prometheus;
 ```
 
+## Other Options
+
+For the ubuntu system, we can add some prometheus options using the default
+config file `/etc/default/prometheus`. So, if you want to run prometheus with
+some options, add command line arguments on `ARGS` variable in that config
+file.
+
+### Extend Retention Time
+
+If you run prometheus with default options over 3 weeks, you cannot query all
+metrics over 15 days. Prometheus will remove old data over the value of
+`--storage.tsdb.retention` or `--storage.tsdb.retention.time`. The default that
+value is **15d** and it means remove old data over 15days.
+
+But if you want query over 15d using prometheus, please add retention time
+options. I has set the retention time to 3 years.
+
+```ini
+ARGS="--storage.tsdb.retention=3y"
+```
+
 ## Reference
+
+### Official Document
+
+- [Storage](https://prometheus.io/docs/prometheus/latest/storage/)
 
 ### English
 
