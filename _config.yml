@@ -23,6 +23,8 @@ devicon: true
 # Features
 katex: true                                             # Enable if using math markup
 google_analytics: UA-122339596-1                        # Tracking ID, e.g. "UA-000000-01"
+cookie_consent: false                                   # To respect the usage of cookies
+cookie_consent_disclaimer: We would like to use third party cookies and scripts to improve the functionality of this website.
 disqus_shortname:                                       # Your discus shortname for comments
 layout_variables:                                       # Open the "_sass > base" folder, and open "_variables.scss"
 footer_icons:                                           # In _data/social.yml
@@ -32,7 +34,7 @@ language:                                               # In _data/language.yml
 
 # PAGINATION
 paginate: 5
-paginate_path: "blog/page:num"
+paginate_path: "/blog/page:num"
 
 # PORTFOLIO
 collections:
@@ -47,7 +49,7 @@ sass:
   sass_dir: _sass
   style: :compressed
 plugins: [jekyll-paginate, jekyll-seo-tag, jekyll-feed, 'jekyll-sitemap']
-exclude: [".jekyll-cache", "Gemfile", "Gemfile.lock", "type-on-strap.gemspec", "*.gem", ".idea", "vendor/*",
+exclude: [".jekyll-cache", "Gemfile", "Gemfile.lock", "type-on-strap.gemspec", "*.gem", ".idea", "vendor/*", ".travis.yml",
           "LICENSE", "README.md", "screenshot.png", "assets/package.json", "assets/node_modules", "assets/gulpfile.js"]
 
 # theme: type-on-strap                                  # if using the theme as a jekyll theme gem
